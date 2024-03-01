@@ -574,5 +574,13 @@ func buildPodTemplateSpec(dc *api.CassandraDatacenter, nodeAffinityLabels map[st
 		return nil, err
 	}
 
+	// Set entrypoint command if specified
+	if dc.Spec.Entrypoint != nil {
+		cassContainer := findContainerByName(CassandraContainerName, baseTemplate.Spec.Containers)
+		if cassContainer != nil {
+			cassContainer.Command = dc.Spec.Entrypoint
+		}
+	}
+
 	return baseTemplate, nil
 }
